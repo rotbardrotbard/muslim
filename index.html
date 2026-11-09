@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <!-- OK JavaScript SDK (мини-приложения/iframe-приложения ОК): apiok.ru/dev/sdk/js -->
 <script type="text/javascript" src="https://api.ok.ru/js/fapi5.js" defer="defer"></script>
-<title>Умма в ОК — мини-приложение</title>
+<title>Умма в ОК — время намаза, Коран и карта мечетей</title>
+<meta name="description" content="Время намаза по вашему городу, кибла, Коран с переводом, уроки основ, календарь Хиджры и Рамадан, карта 11 149 мечетей. Бесплатно, на 9 языках.">
 <style>
 /* Leaflet 1.9.4 (inlined) */
 /* required styles */
@@ -691,10 +692,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --r:20px; --shadow:0 10px 28px rgba(11,107,83,.12);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Manrope',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:#0B3B2E;color:var(--tx);
-  background-image:radial-gradient(1200px 700px at 15% -10%,#146956 0%,transparent 60%),radial-gradient(1000px 600px at 110% 110%,#0E8F6F 0%,transparent 55%);
-  min-height:100vh;display:flex;justify-content:center;align-items:center;padding:28px 16px}
-.stage{display:flex;gap:36px;align-items:center;justify-content:center;flex-wrap:wrap}
+body{font-family:'Manrope',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:var(--bg);color:var(--tx)}
+.stage{display:flex;justify-content:center;height:100vh;height:100dvh}
 /* ---------- side panel ---------- */
 .side{width:330px;color:#DCEFE8;display:none}
 @media(min-width:980px){.side{display:block}}
@@ -708,13 +707,12 @@ body{font-family:'Manrope',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-web
 .side a:hover{background:rgba(79,209,165,.15)}
 .side .note{font-size:12px;color:#7FB3A3;line-height:1.5;margin-top:14px;border-top:1px solid rgba(255,255,255,.12);padding-top:12px}
 /* ---------- phone ---------- */
-.phone{width:390px;height:812px;background:var(--bg);border-radius:46px;border:10px solid #08251C;
-  box-shadow:0 30px 80px rgba(0,0,0,.55);overflow:hidden;position:relative;flex-shrink:0}
-.status{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font-size:13px;font-weight:600;color:var(--tx);background:transparent;position:relative;z-index:5}
+.phone{width:100%;max-width:480px;height:100vh;height:100dvh;background:var(--bg);border-radius:0;border:0;box-shadow:none;overflow:hidden;position:relative;flex-shrink:0}
+.status{display:none}
 .status .ic{letter-spacing:2px;font-size:11px}
-#content{position:absolute;top:44px;bottom:64px;left:0;right:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+#content{position:absolute;top:0;bottom:64px;left:0;right:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
 #content::-webkit-scrollbar{display:none}
-.tabbar{position:absolute;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:1px solid var(--line);display:none;z-index:6}
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:1px solid var(--line);display:none;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
 .tabbar.on{display:flex}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10.5px;color:var(--tx2);cursor:pointer;user-select:none}
 .tab .ti{display:flex;justify-content:center}
@@ -911,32 +909,6 @@ body{font-family:'Manrope',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-web
 <symbol id="ic-av" viewBox="0 0 40 40"><path fill="currentColor" fill-rule="evenodd" d="M36.35 28.52C36.21 28.41 36.12 28.41 35.98 28.50C35.83 28.60 35.64 28.56 35.54 28.42C35.43 28.28 35.46 28.13 35.60 28.09C35.77 28.04 36.09 27.71 36.09 27.59C36.09 27.49 36.08 27.48 35.80 27.48C34.91 27.48 34.07 27.29 33.68 27.00C33.45 26.82 33.41 26.76 33.03 25.94C32.78 25.40 32.64 25.38 31.32 25.72C30.40 25.96 29.79 26.02 28.62 25.98C27.16 25.94 26.88 25.86 25.60 25.03C25.15 24.74 24.69 24.46 24.59 24.42C24.21 24.24 23.66 24.34 23.28 24.64C22.46 25.29 22.25 25.44 21.70 25.70C21.03 26.04 19.76 26.48 19.02 26.64C17.65 26.95 15.85 26.93 14.71 26.60C14.04 26.41 13.28 26.01 13.17 25.81C13.11 25.70 13.09 25.71 13.43 25.65C13.80 25.58 14.40 25.18 14.42 24.99C14.45 24.81 14.32 24.83 13.77 25.11C12.81 25.59 12.21 25.73 11.12 25.73C10.59 25.73 10.42 25.71 10.04 25.61C9.79 25.55 9.46 25.49 9.30 25.49L9.01 25.48L9.00 26.61C9.00 27.85 8.99 27.89 8.83 27.89C8.68 27.89 8.66 27.83 8.62 26.83C8.59 26.33 8.57 25.88 8.55 25.83C8.52 25.67 8.36 25.70 7.89 25.94C7.66 26.06 7.34 26.22 7.17 26.29C6.92 26.40 6.87 26.44 6.87 26.52C6.87 26.70 7.35 26.68 7.57 26.49C7.78 26.30 7.81 26.34 7.87 26.91C7.93 27.49 7.87 27.72 7.64 27.88C7.44 28.01 7.14 28.02 7.14 27.89C7.14 27.78 6.98 27.77 6.85 27.87C6.73 27.95 6.62 27.95 6.55 27.86C6.48 27.78 6.31 27.79 6.06 27.89C5.92 27.95 5.91 27.95 5.83 27.85C5.65 27.63 5.74 27.39 6.12 27.04C6.37 26.82 6.45 26.63 6.30 26.63C6.17 26.63 5.28 26.85 5.13 26.93C4.95 27.01 4.64 27.36 4.54 27.60C4.42 27.90 4.32 27.98 4.05 27.98C3.77 27.98 3.75 27.93 3.92 27.68C4.09 27.44 4.06 27.24 3.86 27.22C3.69 27.20 3.54 27.41 3.54 27.64C3.54 27.82 3.42 27.93 3.23 27.93C3.01 27.93 2.98 27.85 3.11 27.57C3.25 27.25 3.26 27.12 3.11 27.12C2.98 27.12 2.92 27.19 2.83 27.48C2.74 27.80 2.60 27.93 2.37 27.93C2.00 27.93 2.03 27.64 2.47 26.98C2.79 26.49 3.23 26.30 4.24 26.22C5.50 26.12 6.04 25.98 6.89 25.53C7.36 25.28 7.43 25.23 7.45 25.12C7.46 25.00 7.45 24.99 7.31 25.02C7.03 25.06 7.02 25.05 7.04 24.20C7.05 23.28 7.06 23.23 7.50 22.80C7.83 22.46 7.99 22.37 8.14 22.41C8.28 22.44 8.31 22.55 8.31 22.95L8.31 23.25L8.13 23.37C7.91 23.51 7.90 23.55 7.92 24.09C7.92 24.41 7.91 24.52 7.85 24.61C7.65 24.92 7.82 25.01 8.16 24.77C8.55 24.51 8.53 24.55 8.53 23.78C8.53 23.31 8.38 16.97 8.35 16.51C8.35 16.50 8.31 16.50 8.25 16.50C8.09 16.50 8.04 16.69 8.04 17.35C8.04 18.01 8.00 18.22 7.81 18.52C7.69 18.72 7.67 18.78 7.63 19.41C7.58 20.28 7.50 20.56 7.17 20.97C7.01 21.17 6.93 21.18 6.90 20.99C6.85 20.76 6.79 19.16 6.67 15.62C6.61 13.81 6.55 12.11 6.53 11.85L6.51 11.36L8.33 11.36L10.16 11.36L10.16 11.50C10.16 11.58 10.21 12.63 10.27 13.83C10.38 16.05 10.54 19.24 10.59 20.29C10.62 20.85 10.62 20.86 10.52 20.86C10.41 20.86 10.15 20.64 10.03 20.44C9.87 20.19 9.75 19.76 9.68 19.17C9.61 18.59 9.60 18.56 9.33 18.17C9.21 18.00 9.19 17.93 9.14 17.32C9.08 16.58 9.02 16.41 8.86 16.41C8.76 16.41 8.76 16.42 8.76 16.85C8.76 17.55 8.95 24.26 8.97 24.29C9.01 24.33 10.02 24.34 10.46 24.29C11.12 24.23 11.64 23.95 11.85 23.56C12.03 23.20 11.83 23.15 11.47 23.47C11.24 23.68 11.08 23.77 11.04 23.71C11.03 23.69 10.99 23.39 10.95 23.04C10.91 22.69 10.83 22.27 10.78 22.12C10.60 21.54 10.66 21.35 11.27 20.65C11.77 20.09 11.82 20.02 11.82 19.89C11.82 19.78 11.64 19.74 11.51 19.83C11.40 19.89 11.38 19.84 11.42 19.57C11.51 18.91 11.76 18.55 12.38 18.17C12.72 17.96 12.77 17.92 12.77 17.80C12.77 17.68 12.75 17.67 12.59 17.64C12.37 17.60 12.34 17.57 12.38 17.38C12.46 16.94 12.80 16.67 13.56 16.43C13.84 16.34 14.10 16.24 14.14 16.20C14.22 16.12 14.23 15.90 14.16 15.78C14.10 15.66 14.14 15.60 14.40 15.39C15.11 14.83 15.85 14.62 17.45 14.52C17.88 14.49 18.38 14.46 18.55 14.45C18.94 14.42 19.05 14.35 19.11 14.08C19.14 13.95 19.21 13.78 19.26 13.69C19.36 13.53 19.65 13.28 19.69 13.32C19.70 13.33 19.73 13.57 19.75 13.85C19.78 14.38 19.85 14.61 20.01 14.68C20.05 14.69 20.31 14.72 20.59 14.74C21.27 14.80 21.41 14.84 21.67 15.08C21.91 15.29 22.04 15.51 22.04 15.70C22.04 15.82 21.93 15.87 21.84 15.78C21.81 15.76 21.63 15.66 21.43 15.56C20.80 15.24 20.33 15.34 20.33 15.79C20.33 16.10 20.27 16.09 22.17 16.06L23.87 16.03L23.95 16.14C24.07 16.31 24.04 16.51 23.87 16.75C23.78 16.87 23.65 17.07 23.57 17.20C23.32 17.63 23.28 17.65 22.66 17.63C21.85 17.62 21.55 17.71 21.55 17.99C21.55 18.15 21.46 18.13 22.27 18.16C23.06 18.19 23.13 18.23 22.83 18.46C22.69 18.57 22.59 18.59 22.01 18.66C21.06 18.78 20.89 18.85 20.13 19.40C20.09 19.42 20.02 19.40 19.92 19.32C19.84 19.26 19.61 19.13 19.41 19.03L19.05 18.86L18.42 18.86C17.68 18.86 17.53 18.91 17.11 19.29C16.76 19.61 16.64 19.89 16.64 20.34C16.64 20.79 16.73 21.00 17.05 21.29C17.75 21.91 19.04 22.29 20.33 22.25C21.08 22.23 21.31 22.15 21.74 21.78C22.23 21.36 22.28 21.34 23.11 21.00C27.54 19.26 30.12 19.96 32.37 23.52C33.02 24.55 34.17 25.75 34.83 26.08C35.33 26.33 36.33 26.65 37.10 26.80C37.81 26.94 37.92 26.99 37.96 27.14C38.00 27.29 37.63 28.42 37.54 28.45C37.29 28.52 37.14 28.52 37.08 28.45C37.00 28.35 36.83 28.37 36.70 28.50C36.57 28.63 36.50 28.64 36.35 28.52Z"/></symbol>
 </defs></svg>
 <div class="stage">
-
-  <!-- ======== SIDE PANEL (для обсуждения) ======== -->
-  <div class="side">
-    <h1><svg class="side-logo" viewBox="0 0 120 120"><use href="#logo8"/></svg>Умма в ОК</h1>
-    <div class="ver">кликабельный прототип v0.4 · 16 экранов · градиентное направление</div>
-    <h3>Что потрогать</h3>
-    <ul>
-      <li>Лого: полумесяц со звездой в восьмиконечной звезде — на главной и в шеринге</li>
-      <li>Закладки Корана и место чтения сохраняются между открытиями</li>
-      <li>Настоящая карта (Leaflet + OpenStreetMap): пины, попапы, фильтр</li>
-      <li>9 языков · иконки: SVG-флаги и центральные элементы гербов без кругов и обводок (всадник Салавата Юлаева с кураем, башни и орнамент Чечни) — монохром тёмно-еловый #1B4A39</li>
-      <li>Мечети по всей России — полная открытая база «Где намаз» (5648 объектов), фильтры «город × мечети / молельные»</li>
-    </ul>
-    <h3>Все экраны</h3>
-    <div>
-      <a onclick="go('welcome')">Приветствие</a><a onclick="go('lang')">Язык</a><a onclick="go('city')">Город</a><a onclick="go('mazhab')">Мазхаб+пуши</a><a onclick="go('home')">Главная</a><a onclick="go('prayer')">Намаз</a><a onclick="go('qibla')">Кибла</a><a onclick="go('qlist')">Коран</a><a onclick="go('qread')">Чтение суры</a><a onclick="go('basics')">Основы</a><a onclick="go('calendar')">Хиджра</a><a onclick="go('ramadan')">Рамадан</a><a onclick="go('mosques')">Мечети</a><a onclick="go('settings')">Настройки</a><a onclick="go('empty')">Нет гео</a><a onclick="openSheet('sh-share')">Шеринг</a>
-    </div>
-    <h3>Вопросы к обсуждению</h3>
-    <ul>
-      <li>Логотип: такая геометрия восьмиконечной звезды устраивает?</li>
-      <li>Провайдер карты в рабочей версии: OSM/Leaflet (сейчас) или Яндекс?</li>
-      <li>Нужен ли тёмный режим всей темы (сейчас тёмный только Коран)?</li>
-      <li>Переводы на TT/BA/CE/AV/TG требуют вычитки носителями — показать список строк?</li>
-    </ul>
-    <div class="note">Демо-данные: время намаза (Москва, ноябрь) рассчитано для примера; календарь Хиджры считается браузером; записи мечетей — образцы по полям открытой карты gdenamaz.ru. Коран: перевод Э. Кулиева с указанием источника.</div>
-  </div>
 
   <!-- ======== PHONE ======== -->
   <div class="phone">
@@ -1256,9 +1228,6 @@ body{font-family:'Manrope',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-web
 
     </div>
 
-    <!-- FAB: карта экранов -->
-    <div class="fab" onclick="openSheet('sh-map')" data-i18n="fabScreens">🗺 Экраны</div>
-
     <!-- TABBAR -->
     <div class="tabbar" id="tabbar">
       <div class="tab" data-tab="home" onclick="go('home')"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.2 12 4.5l8 6.7V20h-5.4v-5.4h-5.2V20H4z"/></svg></span><span data-i18n="tHome">Главная</span></div>
@@ -1285,32 +1254,6 @@ body{font-family:'Manrope',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-web
         <button class="btn btn-g" onclick="toast(t('tCopy'));closeSheet()" data-i18n="shareCopy">Скопировать текст</button>
         <div style="height:8px"></div>
         <button class="btn btn-g" onclick="closeSheet()" data-i18n="cancel">Отмена</button>
-      </div>
-    </div>
-
-    <!-- OVERLAY: SCREEN MAP -->
-    <div class="ovl" id="sh-map">
-      <div class="sheet">
-        <div class="sh"></div>
-        <div style="font-size:16px;font-weight:800;margin-bottom:12px" data-i18n="mapT">Все экраны прототипа</div>
-        <div class="smap">
-          <button onclick="go('welcome');closeSheet()" data-i18n="m1">1 · Приветствие</button>
-          <button onclick="go('lang');closeSheet()" data-i18n="m2">2 · Язык</button>
-          <button onclick="go('city');closeSheet()" data-i18n="m3">3 · Город</button>
-          <button onclick="go('mazhab');closeSheet()" data-i18n="m4">4 · Мазхаб + пуши</button>
-          <button onclick="go('home');closeSheet()" data-i18n="m5">5 · Главная</button>
-          <button onclick="go('prayer');closeSheet()" data-i18n="m6">6 · Намаз</button>
-          <button onclick="go('qibla');closeSheet()" data-i18n="m7">7 · Кибла</button>
-          <button onclick="go('qlist');closeSheet()" data-i18n="m8">8 · Коран: суры</button>
-          <button onclick="go('qread');closeSheet()" data-i18n="m9">9 · Коран: чтение</button>
-          <button onclick="go('basics');closeSheet()" data-i18n="m10">10 · Основы</button>
-          <button onclick="go('calendar');closeSheet()" data-i18n="m11">11 · Календарь Хиджры</button>
-          <button onclick="go('ramadan');closeSheet()" data-i18n="m12">12 · Рамадан</button>
-          <button onclick="go('mosques');closeSheet()" data-i18n="m13">13 · Мечети рядом</button>
-          <button onclick="go('settings');closeSheet()" data-i18n="m14">14 · Настройки</button>
-          <button onclick="go('empty');closeSheet()" data-i18n="m15">15 · Нет гео</button>
-          <button onclick="closeSheet();openSheet('sh-share')" data-i18n="m16">16 · Шеринг аята</button>
-        </div>
       </div>
     </div>
 
